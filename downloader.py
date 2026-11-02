@@ -17,11 +17,18 @@ def download_audio_with_yt_dlp(url):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['default', 'mweb'],
+                'remote_components': ['ejs:github']
+            }
+        },
+        'cookiesfrombrowser': ('firefox',),
         'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
         'noplaylist': True,
         'quiet': False,
     }
-
+ 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             print(f"\nIniciando download e conversão para MP3...")

@@ -26,10 +26,23 @@ Este é um simples script em Python para baixar o áudio de vídeos do YouTube e
    ```
 
 2. **Crie e ative um ambiente virtual (Recomendado):**
+
+   Crie o ambiente virtual:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # No Windows, use `venv\Scripts\activate`
+   python -m venv .venv
    ```
+
+   Depois ative-o de acordo com o seu terminal (o comando muda conforme o sistema operacional e o shell):
+
+   | Sistema | Terminal / Shell | Ativar o ambiente | Desativar |
+   | --- | --- | --- | --- |
+   | Linux / macOS | `fish` | `source .venv/bin/activate.fish` | `deactivate` |
+   | Linux / macOS | `zsh` | `source .venv/bin/activate` | `deactivate` |
+   | Linux / macOS | `bash` | `source .venv/bin/activate` | `deactivate` |
+   | Windows | PowerShell | `.venv\Scripts\Activate.ps1` | `deactivate` |
+   | Windows | Prompt de Comando (CMD) | `.venv\Scripts\activate.bat` | `deactivate` |
+
+   Após ativar, o terminal passa a exibir `(.venv)` no início da linha, indicando que o ambiente virtual está em uso.
 
 3. **Instale as dependências:**
    ```bash
