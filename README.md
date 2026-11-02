@@ -63,7 +63,39 @@ O script solicitará que você insira o link do vídeo do YouTube que deseja bai
 Por favor, insira o link do vídeo do YouTube: <COLE_O_LINK_AQUI>
 ```
 
+Você também pode passar o link direto como argumento:
+
+```bash
+python downloader.py "https://www.youtube.com/watch?v=..."
+```
+
 Após a conclusão do download, o arquivo MP3 será salvo na pasta `@videos` dentro do diretório do projeto.
+
+## Cookies do navegador
+
+Para acessar vídeos restritos (ou que exigem login), o script usa os cookies do seu navegador. A lista de navegadores testados, em ordem, é:
+
+| Navegador | Identificador |
+| --- | --- |
+| Firefox | `firefox` |
+| Google Chrome | `chrome` |
+| Chromium | `chromium` |
+| Brave | `brave` |
+| Microsoft Edge | `edge` |
+| Opera | `opera` |
+| Vivaldi | `vivaldi` |
+| Naver Whale | `whale` |
+| Safari | `safari` |
+
+O script percorre essa lista e usa o primeiro navegador que encontrar com cookies do YouTube. Se nenhum dos navegadores estiver instalado ou não tiver cookies, o download segue sem cookies.
+
+Para forçar um navegador específico, use a opção `-b` (ou `--browser`):
+
+```bash
+python downloader.py -b firefox "https://www.youtube.com/watch?v=..."
+```
+
+> **Nota:** navegadores baseados em Chromium (Chrome, Edge, Brave, Opera, etc.) no Linux dependem do keyring do sistema para descriptografar os cookies. Se o navegador estiver aberto com um perfil protegido por senha, pode ser necessário fechá-lo antes de rodar o script.
 
 ## Dependências
 
