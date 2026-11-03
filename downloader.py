@@ -3,8 +3,6 @@ import os
 import argparse
 from yt_dlp.cookies import YDLLogger, extract_cookies_from_browser
 
-# Navegadores suportados pelo yt-dlp, na ordem em que são testados.
-# O primeiro que tiver cookies do YouTube é o usado.
 BROWSERS = [
     'firefox',
     'chrome',
@@ -19,7 +17,6 @@ BROWSERS = [
 
 OUTPUT_DIR = "@videos"
 
-# Altura padrão do vídeo (sem flag) e limite máximo aceito pela flag.
 DEFAULT_RESOLUTION = 1080
 MAX_RESOLUTION = 2160
 
@@ -75,8 +72,6 @@ def build_opts(kind, resolution=DEFAULT_RESOLUTION):
     }
 
     if kind == 'video':
-        # Limita pela altura pedida. O fallback pega o melhor formato
-        # combinado (vídeo + áudio) caso não haja streams separados.
         opts['format'] = f'bv*[height<={resolution}]+ba/b[height<={resolution}]'
         opts['merge_output_format'] = 'mp4'
     else:
