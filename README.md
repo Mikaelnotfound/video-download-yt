@@ -76,6 +76,7 @@ python downloader.py "https://www.youtube.com/watch?v=..."
 | *(nenhuma)* | Baixa o vídeo (com áudio) **e** o áudio separado |
 | `-v`, `--video` | Baixa apenas o vídeo, já com áudio |
 | `-m`, `--media`, `--midia` | Baixa apenas o áudio em MP3 |
+| `-r`, `--resolution` | Resolução máxima do vídeo (padrão: `1080`, limite: `2160`) |
 | `-b`, `--browser` | Navegador de onde extrair os cookies |
 
 As flags `-v` e `-m` podem ser combinadas (`-vm`), mas nesse caso o resultado é o mesmo de rodar sem nenhuma flag:
@@ -91,6 +92,23 @@ python downloader.py -v "https://www.youtube.com/watch?v=..."
 python downloader.py -m "https://www.youtube.com/watch?v=..."
 ```
 
+### Resolução
+
+Sem flag, o vídeo é baixado em até **1080p**. Para escolher outra resolução, use `-r` (ou `--resolution`):
+
+```bash
+# Baixa em 720p
+python downloader.py -r 720 "https://www.youtube.com/watch?v=..."
+
+# Baixa em 1440p
+python downloader.py -r 1440 "https://www.youtube.com/watch?v=..."
+
+# Baixa em 4K (2160p, o máximo suportado)
+python downloader.py -r 4k "https://www.youtube.com/watch?v=..."
+```
+
+Valores acima de `2160` são reduzidos automaticamente para 2160p. Resoluções acima de 1080p podem usar codecs AV1/VP9, que exigem players atualizados (VLC, FFmpeg, navegadores modernos).
+
 ### Organização dos arquivos
 
 Cada vídeo baixado vira uma pasta própria dentro de `@videos`, contendo o vídeo e o áudio separados:
@@ -102,7 +120,7 @@ Cada vídeo baixado vira uma pasta própria dentro de `@videos`, contendo o víd
     └── Nome do Vídeo.mp3    # áudio separado
 ```
 
-O vídeo é salvo em MP4 com H.264 (vídeo) e AAC (áudio) para garantir compatibilidade com a maioria dos players. O áudio é convertido para MP3 com qualidade de 192kbps.
+O vídeo é salvo em MP4 (H.264/AAC até 1080p, AV1/AAC acima disso) e o áudio é convertido para MP3 com qualidade de 192kbps.
 
 ## Cookies do navegador
 

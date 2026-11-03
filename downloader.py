@@ -19,6 +19,10 @@ BROWSERS = [
 
 OUTPUT_DIR = "@videos"
 
+# Altura padrão do vídeo (sem flag) e limite máximo aceito pela flag.
+DEFAULT_RESOLUTION = 1080
+MAX_RESOLUTION = 2160
+
 
 def find_browser_cookies(ydl, browsers=None):
     """
@@ -50,12 +54,13 @@ def find_browser_cookies(ydl, browsers=None):
     return fallback if fallback else (None, None)
 
 
-def build_opts(kind):
+def build_opts(kind, resolution=DEFAULT_RESOLUTION):
     """
     Monta as opções do yt-dlp para um tipo de download.
 
     kind 'video': melhor vídeo com áudio, mesclado em MP4.
     kind 'media': melhor áudio, convertido em MP3.
+    resolution: altura máxima do vídeo em pixels.
     """
     opts = {
         'outtmpl': os.path.join(OUTPUT_DIR, '%(title)s', '%(title)s.%(ext)s'),
@@ -70,9 +75,9 @@ def build_opts(kind):
     }
 
     if kind == 'video':
-        # Prefere H.264 + AAC (MP4) por compatibilidade; cai para o melhor
-        # disponível caso o vídeo não tenha esses codecs.
-        opts['format'] = 'bv*[vcodec^=avc1]+ba[ext=m4a]/bv*+ba/b'
+        # Limita pela altura pedida. O fallback pega o melhor formato
+        # combinado (vídeo + áudio) caso não haja streams separados.
+        opts['format'] = f'bv*[height<={resolution}]+ba/b[height<={resolution}]'
         opts['merge_output_format'] = 'mp4'
     else:
         opts['format'] = 'ba/b'
@@ -85,7 +90,7 @@ def build_opts(kind):
     return opts
 
 
-def download(url, kinds, browsers=None):
+def download(url, kinds, browsers=None, resolution=DEFAULT_RESOLUTION):
     """
     Baixa os tipos pedidos ('video' e/ou 'media') do mesmo endereço.
     """
@@ -97,7 +102,7 @@ def download(url, kinds, browsers=None):
     jar = None
 
     for kind in kinds:
-        with yt_dlp.YoutubeDL(build_opts(kind)) as ydl:
+        with yt_dlp.YoutubeDL(build_opts(kind, resolution)) as ydl:
             if not detected:
                 detected = True
                 browser, jar = find_browser_cookies(ydl, browsers)
@@ -116,6 +121,33 @@ def download(url, kinds, browsers=None):
             print(f"\n{label} concluído!")
 
 
+def parse_resolution(value):
+    """
+    Converte a resolução informada em altura em pixels, limitada a 4K.
+
+    Aceita números (720, 1440, 2160) e sufixos comuns (1080p, 4k).
+    """
+    text = value.strip().lower()
+
+    if text.endswith('k'):
+        text = text[:-1]
+        try:
+            height = {'2': 1440, '4': 2160}.get(text, int(text) * 1080)
+        except ValueError:
+            raise argparse.ArgumentTypeError(
+                f"resolução inválida: '{value}' (use 720, 1080, 1440, 2160 ou 4k)")
+    else:
+        if text.endswith('p'):
+            text = text[:-1]
+        try:
+            height = int(text)
+        except ValueError:
+            raise argparse.ArgumentTypeError(
+                f"resolução inválida: '{value}' (use 720, 1080, 1440, 2160 ou 4k)")
+
+    return min(height, MAX_RESOLUTION)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Baixa vídeo e/ou áudio de um vídeo do YouTube.')
     parser.add_argument('url', nargs='?', help='Link do vídeo do YouTube')
@@ -123,6 +155,9 @@ if __name__ == "__main__":
                         help='Baixa apenas o vídeo (com áudio)')
     parser.add_argument('-m', '--media', '--midia', action='store_true',
                         help='Baixa apenas o áudio (MP3)')
+    parser.add_argument('-r', '--resolution', type=parse_resolution, default=DEFAULT_RESOLUTION,
+                        metavar='ALTURA',
+                        help=f'Resolução máxima do vídeo, até 4K (padrão: {DEFAULT_RESOLUTION}p)')
     parser.add_argument('-b', '--browser', choices=BROWSERS,
                         help='Navegador de onde extrair os cookies (padrão: detectar automaticamente)')
     args = parser.parse_args()
@@ -138,4 +173,4 @@ if __name__ == "__main__":
 
     youtube_url = args.url or input("Por favor, insira o link do vídeo do YouTube: ")
     if youtube_url:
-        download(youtube_url, kinds, [args.browser] if args.browser else None)
+        download(youtube_url, kinds, [args.browser] if args.browser else None, args.resolution)
