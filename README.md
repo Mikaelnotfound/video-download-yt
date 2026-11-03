@@ -1,18 +1,18 @@
-# YouTube Audio Downloader
+# YouTube Video Downloader
 
-Este é um simples script em Python para baixar o áudio de vídeos do YouTube e salvá-lo como um arquivo MP3.
+Este é um simples script em Python para baixar vídeos do YouTube e salvá-lo como um arquivo MP4.
 
 ## Funcionalidades
 
-- Extrai o áudio de qualquer vídeo do YouTube.
-- Salva o áudio no formato MP3 com qualidade de 192kbps.
+- Extrai qualquer vídeo do YouTube.
+- Salva o vídeo no formato MP4 com qualidade de 192kbps.
 - Organiza os arquivos baixados em um diretório `@videos`.
 - Utiliza a poderosa e atualizada biblioteca `yt-dlp` para o download.
 
 ## Pré-requisitos
 
 - Python 3.x
-- FFmpeg: `yt-dlp` requer o FFmpeg para converter os arquivos para MP3. Você precisa instalá-lo e garantir que ele esteja acessível no PATH do seu sistema.
+- FFmpeg: `yt-dlp` requer o FFmpeg para converter os arquivos para MP4. Você precisa instalá-lo e garantir que ele esteja acessível no PATH do seu sistema.
   - **Para Debian/Ubuntu:** `sudo apt update && sudo apt install ffmpeg`
   - **Para macOS (usando Homebrew):** `brew install ffmpeg`
   - **Para Windows:** Baixe o executável no [site oficial do FFmpeg](https://ffmpeg.org/download.html) e adicione o diretório `bin` ao PATH do sistema.
