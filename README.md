@@ -69,7 +69,40 @@ Você também pode passar o link direto como argumento:
 python downloader.py "https://www.youtube.com/watch?v=..."
 ```
 
-Após a conclusão do download, o arquivo MP3 será salvo na pasta `@videos` dentro do diretório do projeto.
+### Opções
+
+| Flag | O que faz |
+| --- | --- |
+| *(nenhuma)* | Baixa o vídeo (com áudio) **e** o áudio separado |
+| `-v`, `--video` | Baixa apenas o vídeo, já com áudio |
+| `-m`, `--media`, `--midia` | Baixa apenas o áudio em MP3 |
+| `-b`, `--browser` | Navegador de onde extrair os cookies |
+
+As flags `-v` e `-m` podem ser combinadas (`-vm`), mas nesse caso o resultado é o mesmo de rodar sem nenhuma flag:
+
+```bash
+# Vídeo + áudio separado
+python downloader.py "https://www.youtube.com/watch?v=..."
+
+# Apenas o vídeo, com áudio
+python downloader.py -v "https://www.youtube.com/watch?v=..."
+
+# Apenas o áudio em MP3
+python downloader.py -m "https://www.youtube.com/watch?v=..."
+```
+
+### Organização dos arquivos
+
+Cada vídeo baixado vira uma pasta própria dentro de `@videos`, contendo o vídeo e o áudio separados:
+
+```
+@videos/
+└── Nome do Vídeo/
+    ├── Nome do Vídeo.mp4    # vídeo com áudio
+    └── Nome do Vídeo.mp3    # áudio separado
+```
+
+O vídeo é salvo em MP4 com H.264 (vídeo) e AAC (áudio) para garantir compatibilidade com a maioria dos players. O áudio é convertido para MP3 com qualidade de 192kbps.
 
 ## Cookies do navegador
 
