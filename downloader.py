@@ -18,8 +18,19 @@ BROWSERS = (
     'safari',
 )
 
-BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_OUTPUT_DIR = BASE_DIR / '@videos'
+def _default_output_dir():
+    """Retorna uma pasta de mídia adequada para o sistema operacional."""
+    if sys.platform == 'win32':
+        base = Path.home() / 'Videos'
+    elif sys.platform == 'darwin':
+        base = Path.home() / 'Movies'
+    else:
+        xdg_videos = os.environ.get('XDG_VIDEOS_DIR')
+        base = Path(xdg_videos).expanduser() if xdg_videos else Path.home() / 'Videos'
+    return base / 'video-download-yt'
+
+
+DEFAULT_OUTPUT_DIR = _default_output_dir()
 
 DEFAULT_RESOLUTION = 1080
 MIN_RESOLUTION = 144

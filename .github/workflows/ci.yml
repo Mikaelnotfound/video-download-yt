@@ -25,7 +25,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
+      - name: Validar entry point
+        run: video-download --help
       - name: Executar testes
         run: python -m pytest -q
+      - name: Construir pacote
+        run: python -m build
+      - name: Validar wheel instalada
+        run: |
+          python -m pip install --no-deps --force-reinstall dist/*.whl
+          video-download --help
       - name: Auditar dependências
         run: pip-audit -r requirements.txt

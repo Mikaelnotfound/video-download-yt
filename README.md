@@ -1,6 +1,8 @@
 # YouTube Video Downloader
 
-Script em Python para baixar vídeos do YouTube em MP4 e/ou o áudio em MP3 usando `yt-dlp`.
+CLI em Python para baixar vídeos do YouTube em MP4 e/ou o áudio em MP3 usando `yt-dlp`.
+
+Após instalado, o comando `video-download` pode ser executado de qualquer pasta.
 
 ## Funcionalidades
 
@@ -11,6 +13,7 @@ Script em Python para baixar vídeos do YouTube em MP4 e/ou o áudio em MP3 usan
 - Detecta automaticamente cookies do YouTube em navegadores instalados.
 - Permite escolher o navegador, a pasta de saída e o nível de saída do terminal.
 - Valida URLs e apresenta mensagens de erro sem despejar tracebacks do `yt-dlp`.
+- Pode ser instalado como comando global com `pipx` ou `uv`.
 
 ## Pré-requisitos
 
@@ -34,46 +37,71 @@ Script em Python para baixar vídeos do YouTube em MP4 e/ou o áudio em MP3 usan
 
 > O pacote Python `yt-dlp[default,deno]` já inclui as dependências Python e o runtime Deno usados para resolver desafios JavaScript do YouTube. O FFmpeg continua sendo uma dependência de sistema.
 
-## Instalação
+## Instalação como comando global
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/Mikaelnotfound/video-download-yt.git
-   cd video-download-yt
-   ```
+Esta é a forma recomendada para usar o projeto no dia a dia.
 
-2. Crie e ative um ambiente virtual:
-
-   | Sistema | Shell | Ativar |
-   | --- | --- | --- |
-   | Linux / macOS | bash/zsh | `source .venv/bin/activate` |
-   | Linux / macOS | fish | `source .venv/bin/activate.fish` |
-   | Windows | PowerShell | `.venv\Scripts\Activate.ps1` |
-   | Windows | CMD | `.venv\Scripts\activate.bat` |
-
-3. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Como usar
-
-Execute o script:
+### Com `pipx`
 
 ```bash
-python downloader.py
+pipx install .
 ```
 
-O script solicitará a URL do vídeo:
-
-```text
-Por favor, insira o link do vídeo do YouTube:
-```
-
-Também é possível passar a URL diretamente:
+Ou diretamente do GitHub:
 
 ```bash
-python downloader.py "https://www.youtube.com/watch?v=..."
+pipx install git+https://github.com/Mikaelnotfound/video-download-yt.git
+```
+
+### Com `uv`
+
+```bash
+uv tool install .
+```
+
+Ou diretamente do GitHub:
+
+```bash
+uv tool install git+https://github.com/Mikaelnotfound/video-download-yt.git
+```
+
+Depois da instalação, confirme que o comando está disponível:
+
+```bash
+video-download --help
+```
+
+O comando funciona de qualquer diretório:
+
+```bash
+cd ~/Downloads
+video-download "https://www.youtube.com/watch?v=..."
+```
+
+## Uso
+
+Baixar vídeo e áudio separado:
+
+```bash
+video-download "https://www.youtube.com/watch?v=..."
+```
+
+Baixar apenas o vídeo, já com áudio:
+
+```bash
+video-download -v "https://www.youtube.com/watch?v=..."
+```
+
+Baixar apenas o áudio em MP3:
+
+```bash
+video-download -m "https://www.youtube.com/watch?v=..."
+```
+
+Também é possível executar sem informar a URL; o programa solicitará o link:
+
+```bash
+video-download
 ```
 
 ### Opções
@@ -85,31 +113,25 @@ python downloader.py "https://www.youtube.com/watch?v=..."
 | `-m`, `--media`, `--midia` | Baixa apenas o áudio em MP3 |
 | `-r`, `--resolution` | Resolução máxima do vídeo (padrão: `1080`, limite: `2160`) |
 | `-b`, `--browser` | Navegador de onde extrair os cookies |
-| `-o`, `--output-dir` | Pasta de saída (padrão: `@videos` ao lado do script) |
+| `-o`, `--output-dir` | Pasta de saída |
 | `-q`, `--quiet` | Exibe apenas erros |
 
 As flags `-v` e `-m` podem ser combinadas (`-vm`), mas nesse caso o resultado é o mesmo de rodar sem nenhuma flag.
 
-Exemplos:
+### Exemplos
 
 ```bash
-# Vídeo + áudio separado
-python downloader.py "https://www.youtube.com/watch?v=..."
-
-# Apenas o vídeo, com áudio
-python downloader.py -v "https://www.youtube.com/watch?v=..."
-
-# Apenas o áudio em MP3
-python downloader.py -m "https://www.youtube.com/watch?v=..."
-
 # Vídeo em até 720p
-python downloader.py -r 720 "https://www.youtube.com/watch?v=..."
+video-download -r 720 "https://www.youtube.com/watch?v=..."
 
 # Vídeo em até 4K, em outra pasta
-python downloader.py -r 4k -o "$HOME/Downloads" "https://www.youtube.com/watch?v=..."
+video-download -r 4k -o "$HOME/Downloads" "https://www.youtube.com/watch?v=..."
 
 # Forçar cookies do Firefox
-python downloader.py -b firefox "https://www.youtube.com/watch?v=..."
+video-download -b firefox "https://www.youtube.com/watch?v=..."
+
+# Apenas áudio, sem mensagens de progresso
+video-download -q -m "https://www.youtube.com/watch?v=..."
 ```
 
 ### Resolução
@@ -117,18 +139,25 @@ python downloader.py -b firefox "https://www.youtube.com/watch?v=..."
 Sem flag, o vídeo é baixado em até **1080p**. Para escolher outra resolução, use `-r` ou `--resolution`:
 
 ```bash
-python downloader.py -r 1440 "https://www.youtube.com/watch?v=..."
-python downloader.py -r 4k "https://www.youtube.com/watch?v=..."
+video-download -r 1440 "https://www.youtube.com/watch?v=..."
+video-download -r 4k "https://www.youtube.com/watch?v=..."
 ```
 
 Valores acima de `2160` são reduzidos para 2160p. Valores abaixo de `144` são rejeitados. O valor aceita formatos como `720`, `1080p`, `1440`, `2k` e `4k`.
 
 ### Organização dos arquivos
 
-Cada vídeo baixado vira uma pasta própria dentro da pasta de saída, contendo o vídeo e/ou o áudio:
+Por padrão, os downloads são salvos em:
+
+- **Linux/Windows:** `~/Videos/video-download-yt`
+- **macOS:** `~/Movies/video-download-yt`
+
+Use `-o` / `--output-dir` para escolher outra pasta.
+
+Cada vídeo baixado vira uma pasta própria:
 
 ```text
-@videos/
+video-download-yt/
 └── Nome do Vídeo [ID_DO_VIDEO]/
     ├── Nome do Vídeo [ID_DO_VIDEO].mp4
     └── Nome do Vídeo [ID_DO_VIDEO].mp3
@@ -157,26 +186,58 @@ Sem `-b`, o script procura o primeiro navegador que tenha cookies do YouTube. Se
 Para forçar um navegador específico:
 
 ```bash
-python downloader.py -b firefox "https://www.youtube.com/watch?v=..."
+video-download -b firefox "https://www.youtube.com/watch?v=..."
 ```
 
 > **Nota:** navegadores baseados em Chromium no Linux podem depender do keyring do sistema para descriptografar os cookies. Se o navegador estiver aberto com um perfil protegido por senha, pode ser necessário fechá-lo antes de executar o script.
 
-## Desenvolvimento e testes
+## Desenvolvimento
 
-Instale as dependências de desenvolvimento:
+Clone o repositório:
+
+```bash
+git clone https://github.com/Mikaelnotfound/video-download-yt.git
+cd video-download-yt
+```
+
+Crie e ative um ambiente virtual:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+No Windows PowerShell, use:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Instale o projeto em modo editável com as dependências de desenvolvimento:
 
 ```bash
 pip install -r requirements-dev.txt
 ```
 
-Execute os testes:
+Executar sem instalar o comando global:
+
+```bash
+python downloader.py --help
+```
+
+Executar os testes:
 
 ```bash
 python -m pytest -q
 ```
 
-A suíte cobre validação de URL, resolução, montagem das opções do `yt-dlp`, seleção de cookies e tratamento de erros de download. O workflow de CI também audita as dependências com `pip-audit`.
+Construir o pacote:
+
+```bash
+python -m build
+```
+
+O pacote gera `video-download` no Linux/macOS e `video-download.exe` no Windows.
 
 ## Dependências
 
