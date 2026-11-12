@@ -40,3 +40,9 @@ venv/
 
 # Downloaded media
 @videos/
+
+# Testing and linting
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
