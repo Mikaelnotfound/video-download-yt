@@ -22,18 +22,132 @@ Após instalado, o comando `video-download` pode ser executado de qualquer pasta
 
 ### Instalação do FFmpeg
 
-- **Debian/Ubuntu:**
-  ```bash
-  sudo apt update
-  sudo apt install ffmpeg
-  ```
+O FFmpeg precisa estar instalado e disponível no `PATH`. Depois de instalar, confirme com:
 
-- **macOS (Homebrew):**
-  ```bash
-  brew install ffmpeg
-  ```
+```bash
+ffmpeg -version
+```
 
-- **Windows:** baixe em [ffmpeg.org/download.html](https://ffmpeg.org/download.html), extraia e adicione a pasta `bin` ao `PATH`.
+#### Debian, Ubuntu, Linux Mint e Pop!_OS
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+#### Arch Linux, Manjaro, EndeavourOS e derivados
+
+```bash
+sudo pacman -Syu ffmpeg
+```
+
+#### Fedora
+
+```bash
+sudo dnf install ffmpeg
+```
+
+Caso o pacote não seja encontrado, habilite o RPM Fusion e tente novamente:
+
+```bash
+sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install ffmpeg
+```
+
+#### RHEL, CentOS Stream, Rocky Linux e AlmaLinux
+
+```bash
+sudo dnf install epel-release
+sudo dnf install https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+sudo dnf install ffmpeg
+```
+
+#### openSUSE
+
+```bash
+sudo zypper refresh
+sudo zypper install ffmpeg
+```
+
+Para suporte a todos os codecs, pode ser necessário habilitar o repositório Packman. Consulte a [documentação do openSUSE](https://en.opensuse.org/Additional_package_repositories#Packman) caso o pacote não esteja disponível.
+
+#### Alpine Linux
+
+```bash
+sudo apk add ffmpeg
+```
+
+#### Void Linux
+
+```bash
+sudo xbps-install -S ffmpeg
+```
+
+#### Gentoo
+
+```bash
+sudo emerge --ask media-video/ffmpeg
+```
+
+#### NixOS
+
+Adicione o pacote à configuração do sistema:
+
+```nix
+environment.systemPackages = with pkgs; [
+  ffmpeg
+];
+```
+
+Depois aplique a configuração:
+
+```bash
+sudo nixos-rebuild switch
+```
+
+Para uma sessão temporária, também é possível usar:
+
+```bash
+nix-shell -p ffmpeg
+```
+
+#### macOS
+
+Com Homebrew:
+
+```bash
+brew install ffmpeg
+```
+
+Com MacPorts:
+
+```bash
+sudo port install ffmpeg
+```
+
+#### Windows
+
+Com `winget`:
+
+```powershell
+winget install --id Gyan.FFmpeg -e
+```
+
+Com Chocolatey:
+
+```powershell
+choco install ffmpeg
+```
+
+Com Scoop:
+
+```powershell
+scoop install ffmpeg
+```
+
+Também é possível baixar manualmente em [ffmpeg.org/download.html](https://ffmpeg.org/download.html), extrair o arquivo e adicionar a pasta `bin` ao `PATH`.
+
+Após a instalação no Windows, feche e abra o terminal novamente e confirme com `ffmpeg -version`.
 
 > O pacote Python `yt-dlp[default,deno]` já inclui as dependências Python e o runtime Deno usados para resolver desafios JavaScript do YouTube. O FFmpeg continua sendo uma dependência de sistema.
 
