@@ -14,7 +14,7 @@ Script em Python para baixar vídeos do YouTube em MP4 e/ou o áudio em MP3 usan
 
 ## Pré-requisitos
 
-- Python 3.10 ou superior.
+- Python 3.11 ou superior.
 - FFmpeg instalado e disponível no `PATH`. Ele é necessário para mesclar vídeo/áudio e converter MP3.
 
 ### Instalação do FFmpeg
@@ -173,7 +173,7 @@ pip install -r requirements-dev.txt
 Execute os testes:
 
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
 A suíte cobre validação de URL, resolução, montagem das opções do `yt-dlp`, seleção de cookies e tratamento de erros de download. O workflow de CI também audita as dependências com `pip-audit`.
